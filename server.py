@@ -18,8 +18,9 @@ from flask import Flask, request, jsonify, send_from_directory, abort
 # ── Path setup ────────────────────────────────────────────────────────────────
 ROOT = Path(__file__).parent
 FRONTEND_DIR = ROOT / "stitch_divert1_online_safety_companion"
-CHAT_HTML    = FRONTEND_DIR / "divert1_safety_companion_chat_wcag_2.1_accessible" / "code.html"
-ABOUT_HTML   = FRONTEND_DIR / "divert1_about_architecture" / "code.html"
+CHAT_HTML         = FRONTEND_DIR / "divert1_safety_companion_chat_wcag_2.1_accessible" / "code.html"
+ABOUT_HTML        = FRONTEND_DIR / "divert1_about_architecture" / "code.html"
+CONTRIBUTORS_HTML = FRONTEND_DIR / "divert1_contributors" / "code.html"
 
 # ── Import backend helpers ────────────────────────────────────────────────────
 from chat import load_env, activate_env, build_clients, send_message
@@ -74,6 +75,14 @@ def about_page():
     from flask import redirect
     return redirect("/")
 
+
+
+@app.route("/contributors")
+def contributors_page():
+    """Serve the Contributors page."""
+    if not CONTRIBUTORS_HTML.exists():
+        abort(404, description=f"Contributors HTML not found at {CONTRIBUTORS_HTML}")
+    return CONTRIBUTORS_HTML.read_text(encoding="utf-8")
 
 
 @app.route("/api/chat", methods=["POST"])
